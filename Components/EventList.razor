@@ -1,0 +1,89 @@
+﻿@using ScattyApp.Web.Models
+@using ScattyApp.Web.Services
+@inject JsonFileEventService EventService
+
+<div class="card-columns">
+    @foreach (var ev in EventService.GetEvents())
+    {
+        <div class="card">
+            <div class="card-img" style="background-color: lightgreen">
+                <div class="card-body">
+                    <h5 class="card-title">@ev.Title</h5>
+                </div>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">
+                    <button @onclick="(e => SelectedEvent(ev.Id))"
+                            data-toggle="modal"
+                            data-target="#eventModal"
+                            class="btn btn-primary">
+                        View
+                    </button>
+                </small>
+            </div>
+        </div>
+    }
+</div>
+
+@if(selectedEvent != null)
+{
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventTitle">@selectedEvent.Title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-img" style="background-color: lightgreen">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@selectedEvent.Details</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    @if (!String.IsNullOrEmpty(selectedEvent.CompletedDate))
+                    {
+                        <button @onclick="(e => Complete()" class="btn btn-primary">
+                            Complete
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+@code {
+    Event selectedEvent;
+    long selectedEventId;
+
+    void SelectedEvent(long id)
+    {
+        selectedEventId = id;
+        selectedEvent = EventService.GetEvents().First(x => x.Id == id);
+        System.Diagnostics.Debug.WriteLine("Event clicked: " + selectedEventId);
+        Console.WriteLine("Event clicked: " + selectedEventId);
+    }
+
+    void Complete()
+    {
+
+    }
+
+    void Cancele(long id)
+    {
+
+    }
+
+    void Delete(long id)
+    {
+
+    }
+}
